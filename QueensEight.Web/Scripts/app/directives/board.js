@@ -17,24 +17,23 @@ queensEight.directive("interactive", function() {
 queensEight.directive("cell", function () {
   return {
     restrict: "C",
+    controller: function($scope) {
+      $scope.isDark = function (row, column){
+        var rowOffset = row % 2;
+        var cellIndex = (row * 8 + column + rowOffset) % 2;
+        var isDark = cellIndex == 1;
+        return isDark;
+      };
+    },
     link: function (scope, element, attrs) {
       var row = scope.$parent.$index;
       var column = scope.$index;
 
-      element.addClass('cell');
-      if (queensEight.isDark(row, column)) element.addClass('dark');
-
       element.bind("click", function () {
         scope.toggleQueen(row, column);
       });
-    }
+    },
+    template: '<div ng-class="{dark: isDark($parent.$index, $index)}" class="cell">'
   };
 });
-
-queensEight.isDark = function (row, column){
-    var rowOffset = row % 2;
-    var cellIndex = (row * 8 + column + rowOffset) % 2;
-    var isDark = cellIndex == 1;
-    return isDark;
-};
 
